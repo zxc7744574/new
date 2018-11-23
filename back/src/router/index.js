@@ -53,12 +53,30 @@ export const constantRouterMap = [
   {
     path: '/form',
     component: Layout,
+    redirect: '/nested/menu1',
+    name: 'form',
+    meta: {
+      title: '权限管理',
+      icon: 'form'
+    },
     children: [
       {
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: '权限管理', icon: 'form' }
+        meta: { title: '权限树', icon: 'form' }
+      },
+      {
+        path: 'index1',
+        name: 'Form1',
+        component: () => import('@/views/form/index1'),
+        meta: { title: '权限组', icon: 'form' }
+      },
+      {
+        path: 'index2',
+        name: 'Form2',
+        component: () => import('@/views/form/index2'),
+        meta: { title: '权限角色', icon: 'form' }
       }
     ]
   },
@@ -66,67 +84,24 @@ export const constantRouterMap = [
   {
     path: '/nested',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: '账号管理',
-      icon: 'nested'
-    },
     children: [
       {
         path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
         name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        component: () => import('@/views/nested/menu1/index'), 
+        meta: { title: '账号管理',icon: 'nested' },
       },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
-      }
     ]
   },
 
   {
-    path: 'external-link',
+    path: '/link',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+        path: 'link',
+        name: 'Link',
+        component: () => import('@/views/link/index'), 
         meta: { title: '底部链接', icon: 'link' }
       }
     ]

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <el-button type="primary" size="medium" style="margin-bottom:20px;">新增链接</el-button>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -10,7 +11,12 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="账号">
+      <el-table-column label="名称">
+        <template slot-scope="scope">
+          {{ scope.row.title }}
+        </template>
+      </el-table-column>
+      <el-table-column label="地址">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <el-button type="primary" size="medium" style="margin-bottom:20px;">新增权限组</el-button>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -10,9 +11,14 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="账号">
+      <el-table-column label="权限组">
         <template slot-scope="scope">
           {{ scope.row.title }}
+        </template>
+      </el-table-column>
+      <el-table-column class-name="status-col" label="级别" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="创建时间" width="200">
