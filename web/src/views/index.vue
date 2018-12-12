@@ -1,33 +1,20 @@
 <template>
 <el-container>
   <el-main>
-    <el-card class="box-card" shadow="always">
+
+  <template v-for="item in article">
+    <el-card class="box-card" shadow="always" :key="item.key">
     <div slot="header" class="clearfix">
-        <span>我是文章标题</span>
-        <el-button style="float: right; padding: 3px 0" type="text">查看详情</el-button>
+        <span>{{item.title}}</span>
+        <el-button style="float: right; padding: 3px 0" type="text">{{item.create_time}}</el-button>
     </div>
     <div class="text item">
-        我是文章内容
-    </div>
-    </el-card>
-    <el-card class="box-card" shadow="always">
-    <div slot="header" class="clearfix">
-        <span>我是文章标题</span>
+        {{item.content}}
         <el-button style="float: right; padding: 3px 0" type="text">查看详情</el-button>
     </div>
-    <div class="text item">
-        我是文章内容
-    </div>
     </el-card>
-    <el-card class="box-card" shadow="always">
-    <div slot="header" class="clearfix">
-        <span>我是文章标题</span>
-        <el-button style="float: right; padding: 3px 0" type="text">查看详情</el-button>
-    </div>
-    <div class="text item">
-        我是文章内容
-    </div>
-    </el-card>
+ </template>
+  <el-pagination @current-change="handleCurrentChange" background layout="prev, pager, next" :total="12" :page-size="4"></el-pagination>
   </el-main>
   <el-aside width="30%">
   <el-alert
@@ -60,7 +47,25 @@
 
 <script>
 export default {
-    
+    data() {
+      return {
+        article: {},
+        page: "",
+      }
+    },
+    mounted: function(){
+      this.$http.get('http://api.lxb.cc/blogs?page=1',{emulateJSON: true}).then(function(res){
+        this.article = res.data;
+      })
+    },
+    methods: {
+      handleCurrentChange(val) {
+        this.page = val;
+        this.$http.get('http://api.lxb.cc/blogs?page=' + this.page,{emulateJSON: true}).then(function(res){
+          this.article = res.data;
+        })
+      }
+    }
 }
 </script>
 

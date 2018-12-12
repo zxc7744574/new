@@ -26,10 +26,9 @@
 </van-panel>
 
 <van-tabbar>
-  <van-tabbar-item icon="shop">标签</van-tabbar-item>
-  <van-tabbar-item icon="chat" dot>标签</van-tabbar-item>
-  <van-tabbar-item icon="records" info="5">标签</van-tabbar-item>
-  <van-tabbar-item icon="gold-coin" info="20">标签</van-tabbar-item>
+  <van-tabbar-item icon="shop">首页</van-tabbar-item>
+  <van-tabbar-item icon="records" info="5">文章</van-tabbar-item>
+  <van-tabbar-item icon="gold-coin" info="20">个人中心</van-tabbar-item>
 </van-tabbar>
 </div>
 
