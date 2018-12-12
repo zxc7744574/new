@@ -12,4 +12,6 @@ class Blog extends Model {
         'update_time' => 'int',
         'name','title','content'
     ];
+
+
 }

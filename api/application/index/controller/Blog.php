@@ -8,6 +8,7 @@ use app\index\model\Blog as Blogs;
 
 class Blog extends Controller
 {
+
     /**
      * 显示资源列表
      *
@@ -15,7 +16,8 @@ class Blog extends Controller
      */
     public function index()
     {
-        $list = Blogs::all();
+        $page = $_GET["page"];
+        $list = Blogs::limit(4*($page-1),4)->select();
         return json($list);
     }
 
@@ -50,6 +52,12 @@ class Blog extends Controller
      */
     public function read($id)
     {
+        // 指定允许其他域名访问    
+        header('Access-Control-Allow-Origin:*');    
+        // 响应类型    
+        header('Access-Control-Allow-Methods:POST');    
+        // 响应头设置    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
         $data = Blogs::get($id);
         return json($data);
     }
