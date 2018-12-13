@@ -17,30 +17,14 @@
   <el-pagination @current-change="handleCurrentChange" background layout="prev, pager, next" :total="12" :page-size="4"></el-pagination>
   </el-main>
   <el-aside width="30%">
-  <el-alert
-    title="成功提示的文案"
-    type="success"
-    description="文字说明文字说明文字说明文字说明文字说明文字说明"
-    show-icon :closable="false">
-  </el-alert>
-  <el-alert
-    title="消息提示的文案"
-    type="info"
-    description="文字说明文字说明文字说明文字说明文字说明文字说明"
-    show-icon :closable="false">
-  </el-alert>
-  <el-alert
-    title="警告提示的文案"
-    type="warning"
-    description="文字说明文字说明文字说明文字说明文字说明文字说明"
-    show-icon :closable="false">
-  </el-alert>
-  <el-alert
-    title="错误提示的文案"
-    type="error"
-    description="文字说明文字说明文字说明文字说明文字说明文字说明"
-    show-icon :closable="false">
-  </el-alert>
+    <el-card :body-style="{ padding: '0px' }">
+      <img src="@/assets/icon.png" class="image">
+      <div style="padding: 14px;">
+        <p>Author:  Bug Luv</p>
+        <p style="font-size:13px;color:grey;"> Info：  乐天派！</p>
+        <p><img src="@/assets/github.png" class="image">&nbsp;&nbsp;<img src="@/assets/qq.png" class="image">&nbsp;&nbsp;<img src="@/assets/sina.png" class="image"></p>
+      </div>
+    </el-card>
   </el-aside>
 </el-container>
 </template>
