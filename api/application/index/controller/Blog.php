@@ -17,7 +17,25 @@ class Blog extends Controller
     public function index()
     {
         $page = $_GET["page"];
-        $list = Blogs::limit(4*($page-1),4)->select();
+        $type = $_GET["type"];
+        if($type == '1-0'){
+            $list['info'] = Blogs::limit(4*($page-1),4)->select();
+            $list['num'] = Blogs::count();
+        }else {
+            $num = substr($_GET["type"],-1);
+            $where['type'] = substr($_GET["type"],-1);
+            $list['info'] = Blogs::where($where)->limit(4*($page-1),4)->select();
+            $list['num'] = Blogs::where($where)->count();
+        }
+
+        
+        return json($list);
+    }
+
+    public function show()
+    {
+        $page = $_GET["id"];
+        $list = Blogs::where("id = " .$page)->find();
         return json($list);
     }
 
@@ -58,8 +76,18 @@ class Blog extends Controller
         header('Access-Control-Allow-Methods:POST');    
         // 响应头设置    
         header('Access-Control-Allow-Headers:x-requested-with,content-type');  
-        $data = Blogs::get($id);
-        return json($data);
+        try{
+            $data = Blogs::get($id);
+            if($data){
+                return json($data);
+            }else {
+                abort(404);
+            }
+        } catch(\Exception $e){
+            return abort(404,$e->getMessage());
+        }
+
+        
     }
 
     /**
