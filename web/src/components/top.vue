@@ -25,8 +25,15 @@
         <el-menu-item index="5-11"><router-link to="/webpack">Webpack</router-link></el-menu-item>
         <el-menu-item index="5-12"><router-link to="/git">Git</router-link></el-menu-item>
     </el-submenu>
-      <el-menu-item index="6" style="float:right;"><router-link to="/register">注册</router-link></el-menu-item>
-      <el-menu-item index="7" style="float:right;"><router-link to="/login">登录</router-link></el-menu-item>
+      <div v-show="!isLogin">
+        <el-menu-item index="6" style="float:right;"><router-link to="/register">注册</router-link></el-menu-item>
+        <el-menu-item index="7" style="float:right;"><router-link to="/login">登录</router-link></el-menu-item>
+      </div>
+      <!-- 登录状态 -->
+      <div v-show="isLogin">
+        <el-menu-item index="8" style="float:right;" @click="checkout"><router-link to="/login">退出</router-link></el-menu-item>
+        <el-menu-item index="9" style="float:right;"><router-link to="/login">{{currentUser}}</router-link></el-menu-item>
+      </div>
     </el-menu>
 </template>
 
@@ -42,13 +49,29 @@ import eventVue from '../model/eventVue.js'
     },
     methods: {
       handleSelect(key, keyPath) {
-        // this.$http.get('http://api.lxb.cc/blogs?page=1&key=' + key,{emulateJSON: true}).then(function(res){
           //传输对应页签的数据
+          console.log(keyPath);
           eventVue.$emit("myFun",key);
-        // })
       },
+      checkout() {
+          this.$store.dispatch("setUser",null);
+      }
+    },
+    computed: {
+      isLogin() {
+        if(sessionStorage.getItem("userName") != "null"){
+          this.$store.commit("userStatus",sessionStorage.getItem("userName"));
+        }else {
+          this.$store.commit("userStatus",null);
+        }
+        return this.$store.getters.isLogin;
+      },
+      currentUser() {
+        return this.$store.getters.currentUser
+      }
     }
   }
+
 </script>
 
 <style>

@@ -23,7 +23,11 @@
       <div style="padding: 14px;">
         <p>Author:  Bug Luv</p>
         <p style="font-size:13px;color:grey;"> Info：  乐天派！</p>
-        <p><img src="@/assets/github.png" class="image">&nbsp;&nbsp;<img src="@/assets/qq.png" class="image">&nbsp;&nbsp;<img src="@/assets/sina.png" class="image"></p>
+        <p>
+          <a href="https://github.com/zxc7744574/new"><img src="@/assets/github.png" class="image">&nbsp;&nbsp;</a>
+          <a href="http://wpa.qq.com/msgrd?v=3&uin=405449506&site=qq&menu=yes"><img src="@/assets/qq.png" class="image">&nbsp;&nbsp;</a>
+          <a href="https://weibo.com/p/1005051917779541/home?from=page_100505&mod=TAB#place"><img src="@/assets/sina.png" class="image"></a>
+        </p>
       </div>
     </el-card>
   </el-aside>

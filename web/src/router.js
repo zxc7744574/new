@@ -46,3 +46,4 @@ export default new Router({
     {path: '/git',name: 'git',component: () => import('./views/index.vue')},
   ]
 })
+
