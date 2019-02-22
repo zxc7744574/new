@@ -5,6 +5,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Request;
 use app\index\model\Blog as Blogs;
+use app\index\model\User as Users;
 
 class Blog extends Controller
 {
@@ -14,6 +15,7 @@ class Blog extends Controller
      *
      * @return \think\Response
      */
+    //显示文章主页
     public function index()
     {
         $page = $_GET["page"];
@@ -32,11 +34,47 @@ class Blog extends Controller
         return json($list);
     }
 
+    //显示文章详情
     public function show()
     {
         $page = $_GET["id"];
         $list = Blogs::where("id = " .$page)->find();
         return json($list);
+    }
+
+    //新增账号
+    public function addform(){
+        $info = $_POST;
+        $data['nickname'] = $_POST['info']['acc'];
+        $data['name'] = $_POST['info']['acc'];
+        $data['password'] = $_POST['info']['pass'];
+        $data['createtime'] = time();
+        if($data){
+            $info = Users::create($data);
+            return json($info);
+        }else {
+            return false;
+        }
+    }
+
+    //登录账号
+    public function checkinfo(){
+        $info = $_POST;
+        $data['name'] = $_POST['info']['acc'];
+        $data['password'] = $_POST['info']['pwd'];
+        $result = $this->check($data);
+        if($result){
+            $_SESSION['id'] = $result->id;
+            $_SESSION['nickname'] = $result->nickname;
+            return json($result);
+        }else {
+            return 2;
+        }
+        exit;
+    }
+
+    public function check($data){
+        return Users::where($data)->find();
     }
 
     /**
