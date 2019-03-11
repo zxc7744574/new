@@ -29,8 +29,6 @@ class Blog extends Controller
             $list['info'] = Blogs::where($where)->limit(4*($page-1),4)->select();
             $list['num'] = Blogs::where($where)->count();
         }
-
-        
         return json($list);
     }
 
