@@ -6,6 +6,8 @@ use think\Controller;
 use think\Request;
 use app\index\model\BackUser as Users;
 use app\index\model\Blog as Blogs;
+use app\index\model\Role as Roles;
+use app\index\model\RoleMenu as RoleMenu;
 
 class Back extends Controller
 {
@@ -62,6 +64,49 @@ class Back extends Controller
         }else {
             echo 2;
         }
+    }
+
+    public function role(){
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        $role['list'] = Roles::all();
+        $rolemenu = RoleMenu::all();
+        foreach($role['list'] as $k => $v){
+            if(isset($v['rolelist'])){  //改造一下rolelist
+                $a = json_decode($v['rolelist']);
+                foreach($a as $key=>$value){
+                    switch((int)$value){
+                        case '1': $a[$key] = $rolemenu[0]['rolename']; break;
+                        case '2': $a[$key] = $rolemenu[1]['rolename']; break;
+                        case '3': $a[$key] = $rolemenu[2]['rolename']; break;
+                        case '4': $a[$key] = $rolemenu[3]['rolename']; break;
+                        case '5': $a[$key] = $rolemenu[4]['rolename']; break;
+                        case '6': $a[$key] = $rolemenu[5]['rolename']; break;
+                        default: '未知';
+                    }
+                }
+                $v['rolelist'] = json_encode($a,JSON_UNESCAPED_UNICODE);
+            }
+        }
+        $role['num'] = Roles::count();
+        return json($role);
+    }
+
+    public function rolelist(){
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');
+        $lists['list'] = RoleMenu::All();
+        $lists['role'] = Roles::All();
+        return json($lists);
+        // foreach($lists as $k => $v){
+        //     if($v['belong'] == 0){//根目录
+        //         $infos[$k] = $v;
+        //     }else {// 子目录
+        //         array_push($infos[$v['belong']-1],$v);
+        //     }
+        // }
+        // return json($infos);
     }
 
     /**

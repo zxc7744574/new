@@ -51,7 +51,17 @@
                     {
                         icon: 'el-icon-lx-crown',
                         index: 'role',
-                        title: '权限管理'
+                        title: '权限管理',
+                        subs:[
+                            {
+                                index: 'role',
+                                title: '权限组',
+                            },
+                            {
+                                index: 'account',
+                                title: '账号',
+                            }
+                        ]
                     },
                     {
                         icon: 'el-icon-lx-link',
