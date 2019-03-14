@@ -33,7 +33,7 @@
             <el-form ref="form" :model="form" label-width="50px">
                 <el-form-item label="名称"><el-input v-model="form.authname"></el-input></el-form-item>
                 <el-form-item label="列表">
-                    <template v-for="(a,index) in rolelists">
+                    <template v-for="a in rolelists">
                         <p v-if="a.isroot == 1">{{a.rolename}}</p>
                             <el-checkbox-group v-model="form.rolelist"  @change="handleCheckedCitiesChange">
                                 <el-checkbox v-if="a.belong == 2" :label="a.rolename" :key="a.rolename">{{a.rolename}}</el-checkbox>
@@ -87,6 +87,7 @@ export default {
             form: {
                 id: '',
                 authname: '',
+                rolelist: [],
                 state: '',
             },
             options:[{value: 1,label: 'vue'},{value: 2,label: 'jquery'},{value: 3,label: 'nodejs'},{value: 4,label: 'tp3'},{value: 5,label: 'tp5'},{value: 6,label: 'linux'},
@@ -94,7 +95,6 @@ export default {
             checkAll: false,
             isIndeterminate: true,
             rolelists:[],
-            role1: [],
         }
     },
     created() {
@@ -126,10 +126,11 @@ export default {
             })
             this.idx = index;
             const item = this.adminrole[index];
+            this.getData();
             this.form = {
                 id: item.id,
                 authname: item.authname,
-                rolelist: item.rolelist,
+                rolelist: JSON.parse(item.rolelist),
                 state: item.state
             }
             this.editVisible = true;
