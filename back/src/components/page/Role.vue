@@ -35,7 +35,7 @@
                 <el-form-item label="列表">
                     <template v-for="a in rolelists">
                         <p v-if="a.isroot == 1">{{a.rolename}}</p>
-                            <el-checkbox-group v-model="form.rolelist"  @change="handleCheckedCitiesChange">
+                            <el-checkbox-group v-model="form.rolelist" >
                                 <el-checkbox v-if="a.belong == 2" :label="a.rolename" :key="a.rolename">{{a.rolename}}</el-checkbox>
                                 <el-checkbox v-else :label="a.rolename" :key="a.rolename">{{a.rolename}}</el-checkbox>
                             </el-checkbox-group>
@@ -137,10 +137,11 @@ export default {
         },
         // 保存编辑
         saveEdit() {
-            this.$axios.post('http://api.lxb.cc/index/back/save', {id: this.idx + 1,form: this.form}).then((res) => {
+            this.$axios.post('http://api.lxb.cc/index/back/saverole', {id: this.idx + 1,form: this.form}).then((res) => {
                 if(res.data){
                     this.editVisible = false;
                     this.$message.success(`修改成功`);
+                    this.getData();
                 }else {
                     this.$message.error(`修改失败`);
                 }
@@ -161,12 +162,6 @@ export default {
                 }
             })
         },
-        handleCheckedCitiesChange(value) {
-            console.log(value);
-            // let checkedCount = value.length;
-            // this.checkAll = checkedCount === this.cities.length;
-            // this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
-        }
     },
     filters: {
         statuschange: function(value) {

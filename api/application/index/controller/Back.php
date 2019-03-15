@@ -54,7 +54,7 @@ class Back extends Controller
     public function login(){
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
-        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        // header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
         $data = json_decode(file_get_contents('php://input'),true);
         $info = Users::where($data)->find();
         if($info){
@@ -99,14 +99,6 @@ class Back extends Controller
         $lists['list'] = RoleMenu::All();
         $lists['role'] = Roles::All();
         return json($lists);
-        // foreach($lists as $k => $v){
-        //     if($v['belong'] == 0){//根目录
-        //         $infos[$k] = $v;
-        //     }else {// 子目录
-        //         array_push($infos[$v['belong']-1],$v);
-        //     }
-        // }
-        // return json($infos);
     }
 
     /**
@@ -129,7 +121,7 @@ class Back extends Controller
     {
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
-        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        // header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
         $data = json_decode(file_get_contents('php://input'),true);
         $info['id'] = (int)$data['id'];
         $info['name'] = $data['form']['name'];
@@ -139,6 +131,32 @@ class Back extends Controller
         $info['status'] = $data['form']['status'];
         $info['type'] = $data['form']['type'];
         return Blogs::update($info);
+    }
+
+    public function saverole(Request $request)
+    {
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        
+        $data = json_decode(file_get_contents('php://input'),true);
+        $info['id'] = (int)$data['id'];
+        $info['authname'] = $data['form']['authname'];
+        $menus = RoleMenu::All()->toarray();
+        $bb = $data['form']['rolelist'];
+        $aa = array();
+        if(is_array($bb)){
+            foreach($bb as $key => $value){
+                foreach($menus as $k=>$v){
+                if($value == $v['rolename']){
+                    $aa[$key] = $v['id'];
+                    }
+                }
+            }
+        }
+        $info['rolelist'] = json_encode($aa);
+        $info['state'] = $data['form']['state'];
+        return Roles::update($info);
     }
 
     /**
@@ -151,7 +169,7 @@ class Back extends Controller
     {
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+        // header('Access-Control-Allow-Headers:x-requested-with,content-type');  
         try{
             $data = Blogs::get($id);
             if($data){
@@ -198,7 +216,7 @@ class Back extends Controller
     {
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+        // header('Access-Control-Allow-Headers:x-requested-with,content-type');  
         $data = json_decode(file_get_contents('php://input'),true);
         $id = $data['id'];
         return Blogs::destroy($id);
@@ -208,7 +226,7 @@ class Back extends Controller
     {
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+        // header('Access-Control-Allow-Headers:x-requested-with,content-type');  
         $data = json_decode(file_get_contents('php://input'),true);
         $info = $data['list'];
         if(is_array($info)){
