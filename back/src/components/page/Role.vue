@@ -152,7 +152,7 @@ export default {
             this.delVisible = true;
         },
         deleteRow(){
-            this.$axios.post('http://api.lxb.cc/index/back/delete', {id: this.idx + 1}).then((res) => {
+            this.$axios.post('http://api.lxb.cc/index/back/deleteback', {id: this.idx + 1}).then((res) => {
                 if(res.data){
                     this.tabledata.splice(this.idx, 1);
                     this.$message.success('删除成功');

@@ -55,11 +55,11 @@
                         subs:[
                             {
                                 index: 'role',
-                                title: '权限组',
+                                title: '权限管理',
                             },
                             {
                                 index: 'account',
-                                title: '账号',
+                                title: '账号管理',
                             }
                         ]
                     },
@@ -68,11 +68,11 @@
                         index: 'link',
                         title: '底部链接'
                     },
-                    {
-                        icon: 'el-icon-lx-cart',
-                        index: 'account',
-                        title: '账号管理'
-                    },
+                    // {
+                    //     icon: 'el-icon-lx-cart',
+                    //     index: 'account',
+                    //     title: '账号管理'
+                    // },
                     // {
                     //     icon: 'el-icon-lx-cascades',
                     //     index: 'table',

@@ -8,6 +8,7 @@ use app\index\model\BackUser as Users;
 use app\index\model\Blog as Blogs;
 use app\index\model\Role as Roles;
 use app\index\model\RoleMenu as RoleMenu;
+use app\index\model\Link as Links;
 
 class Back extends Controller
 {
@@ -54,16 +55,10 @@ class Back extends Controller
     public function login(){
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
-        // header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
         $data = json_decode(file_get_contents('php://input'),true);
-        $info = Users::where($data)->find();
-        if($info){
-            $mes['code'] = "2000";
-            $mes['data'] = array("token" => "admin");
-            return json_encode($mes);
-        }else {
-            echo 2;
-        }
+        $info = Users::where($data['value'])->select();
+        return json($info);
     }
 
     public function role(){
@@ -91,6 +86,24 @@ class Back extends Controller
         }
         $role['num'] = Roles::count();
         return json($role);
+    }
+
+    public function getuser(){
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        $info['list'] = Users::field('back_user.*,authname')->join('role','back_user.role = role.id','left')->select();
+        $info['num'] = Users::Count();
+        return json($info);
+    }
+
+    public function getlinks(){
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        $info['list'] = Links::All();
+        $info['num'] = Links::Count();
+        return json($info);                
     }
 
     public function rolelist(){
@@ -138,7 +151,6 @@ class Back extends Controller
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
         header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
-        
         $data = json_decode(file_get_contents('php://input'),true);
         $info['id'] = (int)$data['id'];
         $info['authname'] = $data['form']['authname'];
@@ -157,6 +169,33 @@ class Back extends Controller
         $info['rolelist'] = json_encode($aa);
         $info['state'] = $data['form']['state'];
         return Roles::update($info);
+    }
+
+    public function saveuser(Request $request)
+    {
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        $data = json_decode(file_get_contents('php://input'),true);
+        $info['id'] = (int)$data['id'];
+        $info['username'] = $data['form']['account'];
+        $info['role'] = $data['form']['role'];
+        $info['password'] = $data['form']['password'];
+        $info['logintime'] = time();
+        $info['state'] = $data['form']['state'];
+        return Users::update($info);
+    }
+
+    public function savelink(){
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+        $data = json_decode(file_get_contents('php://input'),true);
+        $info['id'] = (int)$data['id'];
+        $info['name'] = $data['form']['name'];
+        $info['link'] = $data['form']['link'];
+        $info['state'] = $data['form']['state'];
+        return Links::update($info);        
     }
 
     /**
@@ -216,10 +255,38 @@ class Back extends Controller
     {
         header('Access-Control-Allow-Origin:*');    
         header('Access-Control-Allow-Methods:POST');    
-        // header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
         $data = json_decode(file_get_contents('php://input'),true);
         $id = $data['id'];
         return Blogs::destroy($id);
+    }
+
+    public function deleteback()
+    {
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+        $data = json_decode(file_get_contents('php://input'),true);
+        $id = $data['id'];
+        return Roles::destroy($id);
+    }
+
+    public function deleteuser(){
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+        $data = json_decode(file_get_contents('php://input'),true);
+        $id = $data['id'];
+        return Users::destroy($id);       
+    }
+
+    public function deletelink(){
+        header('Access-Control-Allow-Origin:*');    
+        header('Access-Control-Allow-Methods:POST');    
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+        $data = json_decode(file_get_contents('php://input'),true);
+        $id = $data['id'];
+        return Links::destroy($id);         
     }
 
     public function delall()

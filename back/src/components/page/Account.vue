@@ -8,9 +8,9 @@
         <div class="container">
             <el-table :data="tabledata" border class="table" ref="multipleTable">
                 <el-table-column prop="id" label="ID" width="120"></el-table-column>
-                <el-table-column prop="authname" label="账号" width="150"></el-table-column>
-                <el-table-column prop="rolelist" label="权限组"></el-table-column>
-                <el-table-column prop="rolelist" label="登录时间"></el-table-column>
+                <el-table-column prop="username" label="账号" width="150"></el-table-column>
+                <el-table-column prop="authname" label="权限组"></el-table-column>
+                <el-table-column prop="logintime" label="最近登录时间"></el-table-column>
                 <el-table-column prop="state" label="状态" width="200">
                     <template slot-scope="scope">
                         <el-tag :type="scope.row.state == '1' ? 'success' : 'danger'" disable-transitions>{{scope.row.state | statuschange}}</el-tag>
@@ -30,22 +30,21 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="修改权限" :visible.sync="editVisible" width="80%">
+        <el-dialog title="修改账号" :visible.sync="editVisible" width="80%">
             <el-form ref="form" :model="form" label-width="50px">
-                <el-form-item label="名称"><el-input v-model="form.authname"></el-input></el-form-item>
-                <el-form-item label="列表">
-                    <template v-for="a in rolelists">
-                        <p v-if="a.isroot == 1">{{a.rolename}}</p>
-                            <el-checkbox-group v-model="form.rolelist" >
-                                <el-checkbox v-if="a.belong == 2" :label="a.rolename" :key="a.rolename">{{a.rolename}}</el-checkbox>
-                                <el-checkbox v-else :label="a.rolename" :key="a.rolename">{{a.rolename}}</el-checkbox>
-                            </el-checkbox-group>
-                    </template> 
+                <el-form-item label="账号"><el-input v-model="form.account"></el-input></el-form-item>
+                <el-form-item label="密码"><el-input v-model="form.password" type="password"></el-input></el-form-item>
+                <el-form-item label="组别">
+                    <el-radio-group v-model="form.role" >
+                        <template v-for="a in rolelists">
+                            <el-radio :label="a.id" :key="a.id">{{a.authname}}</el-radio>
+                        </template> 
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-radio-group v-model="form.state">
-                        <el-radio :label="1">发布</el-radio>
-                        <el-radio :label="0">草稿</el-radio>
+                        <el-radio :label="1">可用</el-radio>
+                        <el-radio :label="0">禁用</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
@@ -73,14 +72,9 @@ export default {
         return {
             value: "",
             tabledata: [],
-            adminrole:[],
             cur_page: 1,
             total: 10,
             status: 1,
-            searchbox:[{
-                value: "",
-                input: "",
-            }],
             editVisible: false,
             delVisible: false,
             del_list: [],
@@ -88,57 +82,47 @@ export default {
             form: {
                 id: '',
                 authname: '',
-                rolelist: [],
+                account: '',
+                password: '',
+                role: '',
                 state: '',
             },
-            options:[{value: 1,label: 'vue'},{value: 2,label: 'jquery'},{value: 3,label: 'nodejs'},{value: 4,label: 'tp3'},{value: 5,label: 'tp5'},{value: 6,label: 'linux'},
-            {value: 7,label: 'xshell'},{value: 8,label: 'docker'},{value: 9,label: 'ES6'},{value: 10,label: '正则'},{value: 12,label: 'git'}],
-            checkAll: false,
-            isIndeterminate: true,
-            rolelists:[],
+            rolelists: [],
         }
     },
     created() {
         this.getData();
     },
     methods: {
-        search() {
-            this.$axios.post('http://api.lxb.cc/index/back/ms', {value: this.searchbox.value,input: this.searchbox.input}).then((res) => {
-                this.tabledata = res.data.list;
-                this.total = res.data.num;
-            })
-        },
         handleCurrentChange(val) {
             this.cur_page = val;
             this.getData();
         },
         getData() {
-            this.$axios.post('http://api.lxb.cc/index/back/role', {page: this.cur_page}).then((res) => {
+            this.$axios.post('http://api.lxb.cc/index/back/getuser', {page: this.cur_page}).then((res) => {
                 this.tabledata = res.data.list;
                 this.total = res.data.num;
-                this.adminrole = res.data.list;
             })
         },
         handleEdit(index, row) {
-            //展示所有的权限组，根据index的数据勾选
-            this.$axios.post('http://api.lxb.cc/index/back/rolelist').then((res)=>{
-                this.rolelists = res.data.list;//返回所有权限名字
-                this.adminrole = res.data.role;
-            })
+            this.$axios.post('http://api.lxb.cc/index/back/role', {page: this.cur_page}).then((res) => {
+                this.rolelists = res.data.list;
+            })            
             this.idx = index;
-            const item = this.adminrole[index];
-            this.getData();
+            const item = this.tabledata[index];
             this.form = {
                 id: item.id,
-                authname: item.authname,
-                rolelist: JSON.parse(item.rolelist),
+                authname: item.username,
+                account: item.username,
+                password: item.password,
+                role: item.role,
                 state: item.state
             }
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            this.$axios.post('http://api.lxb.cc/index/back/saverole', {id: this.idx + 1,form: this.form}).then((res) => {
+            this.$axios.post('http://api.lxb.cc/index/back/saveuser', {id: this.idx + 1,form: this.form}).then((res) => {
                 if(res.data){
                     this.editVisible = false;
                     this.$message.success(`修改成功`);
@@ -153,7 +137,7 @@ export default {
             this.delVisible = true;
         },
         deleteRow(){
-            this.$axios.post('http://api.lxb.cc/index/back/delete', {id: this.idx + 1}).then((res) => {
+            this.$axios.post('http://api.lxb.cc/index/back/deleteuser', {id: this.idx + 1}).then((res) => {
                 if(res.data){
                     this.tabledata.splice(this.idx, 1);
                     this.$message.success('删除成功');
@@ -169,24 +153,6 @@ export default {
             if(value == 1){return '可用';}
             else {return '禁用';}
         },
-        typechange: function (value) {
-            switch(value) {
-                //1:vue 2:jquery 3:nodejs 4:tp3 5:tp5 6:linux 7:xshell 8:docker 9:ES6 10:正则 11:webpack 12Git
-                case 1 : return 'vue';
-                case 2 : return 'jquery';
-                case 3 : return 'nodejs';
-                case 4 : return 'tp3';
-                case 5 : return 'tp5';
-                case 6 : return 'linux';
-                case 7 : return 'xshell';
-                case 8 : return 'docker';
-                case 9 : return 'ES6';
-                case 10 : return '正则';
-                case 11 : return 'webpack';
-                case 12 : return 'Git';
-                default : return 'false';
-            }
-        }
     }
 }
 </script>

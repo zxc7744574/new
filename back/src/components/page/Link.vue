@@ -1,225 +1,171 @@
 <template>
-    <div>
+    <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-emoji"></i> 自定义图标</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-cascades"></i> 链接管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <h2>使用方法</h2>
-            <p style="line-height: 50px;">
-                直接通过设置类名为 el-icon-lx-iconName 来使用即可。例如：（共{{iconList.length}}个图标）
-            </p>
-            <p class="example-p">
-                <i class="el-icon-lx-redpacket_fill" style="font-size: 30px;color: #ff5900"></i>
-                <span>&lt;i class=&quot;el-icon-lx-redpacket_fill&quot;&gt;&lt;/i&gt;</span>
-            </p>
-            <p class="example-p">
-                <i class="el-icon-lx-weibo" style="font-size: 30px;color:#fd5656"></i>
-                <span>&lt;i class=&quot;el-icon-lx-weibo&quot;&gt;&lt;/i&gt;</span>
-            </p>
-            <p class="example-p">
-                <i class="el-icon-lx-emojifill" style="font-size: 30px;color: #ffc300"></i>
-                <span>&lt;i class=&quot;el-icon-lx-emojifill&quot;&gt;&lt;/i&gt;</span>
-            </p>
-            <br>
-            <h2>图标</h2>
-            <div class="search-box">
-                <el-input class="search" size="large" v-model="keyword" clearable placeholder="请输入图标名称"></el-input>
+            <el-table :data="tabledata" border class="table" ref="multipleTable">
+                <el-table-column prop="id" label="ID" width="120"></el-table-column>
+                <el-table-column prop="name" label="名称" width="150"></el-table-column>
+                <el-table-column prop="link" label="链接地址"></el-table-column>
+                <el-table-column prop="state" label="状态" width="200">
+                    <template slot-scope="scope">
+                        <el-tag :type="scope.row.state == '1' ? 'success' : 'danger'" disable-transitions>{{scope.row.state | statuschange}}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="200" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination">
+                <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="total">
+                </el-pagination>
             </div>
-            <ul>
-                <li class="icon-li" v-for="(item,index) in list" :key="index">
-                    <div class="icon-li-content">
-                        <i :class="`el-icon-lx-${item}`"></i>
-                        <span>{{item}}</span>
-                    </div>
-                </li>
-            </ul>
         </div>
 
+        <!-- 编辑弹出框 -->
+        <el-dialog title="修改账号" :visible.sync="editVisible" width="80%">
+            <el-form ref="form" :model="form" label-width="50px">
+                <el-form-item label="名称"><el-input v-model="form.name"></el-input></el-form-item>
+                <el-form-item label="地址"><el-input v-model="form.link"></el-input></el-form-item>
+                <el-form-item label="状态">
+                    <el-radio-group v-model="form.state">
+                        <el-radio :label="1">可用</el-radio>
+                        <el-radio :label="0">禁用</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
+            </span>
+        </el-dialog>
+    
+        <!-- 删除提示框 -->
+        <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
+            <div class="del-dialog-cnt">是否确定删除？</div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="delVisible = false">取 消</el-button>
+                <el-button type="primary" @click="deleteRow">确 定</el-button>
+            </span>
+        </el-dialog>
+    
     </div>
 </template>
 
 <script>
-    export default {
-        data: function(){
-            return {
-                keyword: '',
-                iconList: [
-                    'attentionforbid',
-                    'attentionforbidfill',
-                    'attention',
-                    'attentionfill',
-                    'tag',
-                    'tagfill',
-                    'people',
-                    'peoplefill',
-                    'notice',
-                    'noticefill',
-                    'mobile',
-                    'mobilefill',
-                    'voice',
-                    'voicefill',
-                    'unlock',
-                    'lock',
-                    'home',
-                    'homefill',
-                    'delete',
-                    'deletefill',
-                    'notification',
-                    'notificationfill',
-                    'notificationforbidfill',
-                    'like',
-                    'likefill',
-                    'comment',
-                    'commentfill',
-                    'camera',
-                    'camerafill',
-                    'warn',
-                    'warnfill',
-                    'time',
-                    'timefill',
-                    'location',
-                    'locationfill',
-                    'favor',
-                    'favorfill',
-                    'skin',
-                    'skinfill',
-                    'news',
-                    'newsfill',
-                    'record',
-                    'recordfill',
-                    'emoji',
-                    'emojifill',
-                    'message',
-                    'messagefill',
-                    'goods',
-                    'goodsfill',
-                    'crown',
-                    'crownfill',
-                    'move',
-                    'add',
-                    'hot',
-                    'hotfill',
-                    'service',
-                    'servicefill',
-                    'present',
-                    'presentfill',
-                    'pic',
-                    'picfill',
-                    'rank',
-                    'rankfill',
-                    'male',
-                    'female',
-                    'down',
-                    'top',
-                    'recharge',
-                    'rechargefill',
-                    'forward',
-                    'forwardfill',
-                    'info',
-                    'infofill',
-                    'redpacket',
-                    'redpacket_fill',
-                    'roundadd',
-                    'roundaddfill',
-                    'friendadd',
-                    'friendaddfill',
-                    'cart',
-                    'cartfill',
-                    'more',
-                    'moreandroid',
-                    'back',
-                    'right',
-                    'shop',
-                    'shopfill',
-                    'question',
-                    'questionfill',
-                    'roundclose',
-                    'roundclosefill',
-                    'roundcheck',
-                    'roundcheckfill',
-                    'global',
-                    'mail',
-                    'punch',
-                    'exit',
-                    'upload',
-                    'read',
-                    'file',
-                    'link',
-                    'full',
-                    'group',
-                    'friend',
-                    'profile',
-                    'addressbook',
-                    'calendar',
-                    'text',
-                    'copy',
-                    'share',
-                    'wifi',
-                    'vipcard',
-                    'weibo',
-                    'remind',
-                    'refresh',
-                    'filter',
-                    'settings',
-                    'scan',
-                    'qrcode',
-                    'cascades',
-                    'apps',
-                    'sort',
-                    'searchlist',
-                    'search',
-                    'edit'
-                ]
-            }
-        },
-        computed: {
-            list(){
-                return this.iconList.filter((item) => {
-                    return item.indexOf(this.keyword) !== -1;
-                })
-            }
+export default {
+    data(){
+        return {
+            value: "",
+            tabledata: [],
+            cur_page: 1,
+            total: 10,
+            status: 1,
+            editVisible: false,
+            delVisible: false,
+            del_list: [],
+            multipleSelection: [],
+            form: {
+                id: '',
+                name: '',
+                link: '',
+                state: '',
+            },
         }
+    },
+    created() {
+        this.getData();
+    },
+    methods: {
+        handleCurrentChange(val) {
+            this.cur_page = val;
+            this.getData();
+        },
+        getData() {
+            this.$axios.post('http://api.lxb.cc/index/back/getlinks', {page: this.cur_page}).then((res) => {
+                this.tabledata = res.data.list;
+                this.total = res.data.num;
+            })
+        },
+        handleEdit(index, row) {
+            this.idx = index;
+            const item = this.tabledata[index];
+            this.form = {
+                id: item.id,
+                name: item.name,
+                link: item.link,
+                state: item.state
+            }
+            this.editVisible = true;
+        },
+        // 保存编辑
+        saveEdit() {
+            this.$axios.post('http://api.lxb.cc/index/back/savelink', {id: this.idx + 1,form: this.form}).then((res) => {
+                if(res.data){
+                    this.editVisible = false;
+                    this.$message.success(`修改成功`);
+                    this.getData();
+                }else {
+                    this.$message.error(`修改失败`);
+                }
+            })
+        },
+        handleDelete(index, row) {
+            this.idx = index;
+            this.delVisible = true;
+        },
+        deleteRow(){
+            this.$axios.post('http://api.lxb.cc/index/back/deletelink', {id: this.idx + 1}).then((res) => {
+                if(res.data){
+                    this.tabledata.splice(this.idx, 1);
+                    this.$message.success('删除成功');
+                    this.delVisible = false;
+                }else {
+                    this.$message.error(`删除失败`);
+                }
+            })
+        },
+    },
+    filters: {
+        statuschange: function(value) {
+            if(value == 1){return '可用';}
+            else {return '禁用';}
+        },
     }
+}
 </script>
-
 <style scoped>
-.example-p{
-    height: 45px;
-    display: flex;
-    align-items: center;
-}
-.search-box{
-    text-align: center;
-    margin-top: 10px;
-}
-.search{
-    width: 300px;
-}
-ul,li{
-    list-style: none;
-}
-.icon-li{
-    display: inline-block;
-    padding: 10px;
-    width: 120px;
-    height: 120px;
-}
-.icon-li-content{
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-.icon-li-content i{
-    font-size: 36px;
-    color: #606266;
-}
-.icon-li-content span{
-    margin-top: 10px;
-    color: #787878;
-}
+    .handle-box {
+        margin-bottom: 20px;
+    }
+
+    .handle-select {
+        width: 120px;
+    }
+
+    .handle-input {
+        width: 300px;
+        display: inline-block;
+    }
+    .del-dialog-cnt{
+        font-size: 16px;
+        text-align: center
+    }
+    .table{
+        width: 100%;
+        font-size: 14px;
+    }
+    .red{
+        color: #ff0000;
+    }
+    .mr10{
+        margin-right: 10px;
+    }
 </style>
+
