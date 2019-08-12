@@ -8,15 +8,14 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-use think\Route;
-
-// Route::rule(':version/user/:id','api/:version.User/read');
-Route::resource('blogs','index/blog');
-//该方法注册了一个名为blogs的资源路由，内部自动注册7个路由规则
 
 return [
     '__pattern__' => [
         'name' => '\w+',
-    ]
-    
+    ],
+    '[hello]'     => [
+        ':id'   => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
+        ':name' => ['index/hello', ['method' => 'post']],
+    ],
+
 ];

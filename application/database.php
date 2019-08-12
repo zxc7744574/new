@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '47.94.1.13',
+    'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 'newblog',
+    'database'        => '',
     // 用户名
-    'username'        => 'zengyuwen',
+    'username'        => 'root',
     // 密码
-    'password'        => '327523057zywZYW',
+    'password'        => '',
     // 端口
     'hostport'        => '',
     // 连接dsn
@@ -45,7 +45,7 @@ return [
     // 是否严格检查字段是否存在
     'fields_strict'   => true,
     // 数据集返回类型
-    'resultset_type'  => 'collection',
+    'resultset_type'  => 'array',
     // 自动写入时间戳字段
     'auto_timestamp'  => false,
     // 时间字段取出后的默认时间格式

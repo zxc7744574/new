@@ -15,9 +15,9 @@ return [
     // +----------------------------------------------------------------------
 
     // 应用调试模式
-    'app_debug'              => true,
+    'app_debug'              => false,
     // 应用Trace
-    'app_trace'              => true,
+    'app_trace'              => false,
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -92,6 +92,8 @@ return [
     'route_complete_match'   => false,
     // 路由配置文件（支持配置多个）
     'route_config_file'      => ['route'],
+    // 是否开启路由解析缓存
+    'route_check_cache'      => false,
     // 是否强制使用路由
     'url_route_must'         => false,
     // 域名部署
@@ -178,7 +180,7 @@ return [
     // +----------------------------------------------------------------------
     'trace'                  => [
         // 内置Html Console 支持扩展
-        'type' => 'Console',
+        'type' => 'Html',
     ],
 
     // +----------------------------------------------------------------------
